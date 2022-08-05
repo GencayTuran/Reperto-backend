@@ -54,7 +54,7 @@ namespace Reperto.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RepertoireId")] Repertoire repertoire)
+        public async Task<IActionResult> Create([Bind("RepertoireId,Name")] Repertoire repertoire)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace Reperto.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RepertoireId")] Repertoire repertoire)
+        public async Task<IActionResult> Edit(int id, [Bind("RepertoireId,Name")] Repertoire repertoire)
         {
             if (id != repertoire.RepertoireId)
             {

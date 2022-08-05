@@ -8,6 +8,8 @@ namespace Reperto.Models
     public class Repertoire
     {
         public int RepertoireId { get; set; }
-        public Song Song { get; set; }
+        public string Name { get; set; }
+
+        public ICollection<Song> Songs { get; set; }
     }
 }

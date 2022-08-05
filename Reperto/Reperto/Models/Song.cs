@@ -12,5 +12,8 @@ namespace Reperto.Models
         public string Band { get; set; }
         public string Lyrics { get; set; } //link to resources txt files
         public string Mood { get; set; }
+
+        public Repertoire Repertoire { get; set; }
+        public int RepertoireId { get; set; }
     }
 }

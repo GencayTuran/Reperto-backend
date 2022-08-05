@@ -22,7 +22,8 @@ namespace Reperto.Controllers
         // GET: Songs
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Songs.ToListAsync());
+            var repertoDbContext = _context.Songs.Include(s => s.Repertoire);
+            return View(await repertoDbContext.ToListAsync());
         }
 
         // GET: Songs/Details/5
@@ -34,6 +35,7 @@ namespace Reperto.Controllers
             }
 
             var song = await _context.Songs
+                .Include(s => s.Repertoire)
                 .FirstOrDefaultAsync(m => m.SongId == id);
             if (song == null)
             {
@@ -46,6 +48,7 @@ namespace Reperto.Controllers
         // GET: Songs/Create
         public IActionResult Create()
         {
+            ViewData["RepertoireId"] = new SelectList(_context.Repertoires, "RepertoireId", "RepertoireId");
             return View();
         }
 
@@ -54,7 +57,7 @@ namespace Reperto.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SongId,Title,Band,Lyrics,Mood")] Song song)
+        public async Task<IActionResult> Create([Bind("SongId,Title,Band,Lyrics,Mood,RepertoireId")] Song song)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +65,7 @@ namespace Reperto.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["RepertoireId"] = new SelectList(_context.Repertoires, "RepertoireId", "RepertoireId", song.RepertoireId);
             return View(song);
         }
 
@@ -78,6 +82,7 @@ namespace Reperto.Controllers
             {
                 return NotFound();
             }
+            ViewData["RepertoireId"] = new SelectList(_context.Repertoires, "RepertoireId", "RepertoireId", song.RepertoireId);
             return View(song);
         }
 
@@ -86,7 +91,7 @@ namespace Reperto.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SongId,Title,Band,Lyrics,Mood")] Song song)
+        public async Task<IActionResult> Edit(int id, [Bind("SongId,Title,Band,Lyrics,Mood,RepertoireId")] Song song)
         {
             if (id != song.SongId)
             {
@@ -113,6 +118,7 @@ namespace Reperto.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["RepertoireId"] = new SelectList(_context.Repertoires, "RepertoireId", "RepertoireId", song.RepertoireId);
             return View(song);
         }
 
@@ -125,6 +131,7 @@ namespace Reperto.Controllers
             }
 
             var song = await _context.Songs
+                .Include(s => s.Repertoire)
                 .FirstOrDefaultAsync(m => m.SongId == id);
             if (song == null)
             {
