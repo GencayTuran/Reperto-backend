@@ -17,18 +17,19 @@ namespace Reperto.Data
             if (!context.Songs.Any())
             {
                 context.Songs.AddRange(GetSongs());
-                context.SaveChanges();
-            }
-            if (!context.Chords.Any())
-            {
                 context.Chords.AddRange(GetChords());
-                context.SaveChanges();
-            }
-            if (!context.Repertoires.Any())
-            {
                 context.Repertoires.AddRange(GetRepertoires());
+
                 context.SaveChanges();
             }
+            //if (!context.Chords.Any())
+            //{
+            //    context.Chords.AddRange(GetChords());
+            //}
+            //if (!context.Repertoires.Any())
+            //{
+            //    context.Repertoires.AddRange(GetRepertoires());
+            //}
         }
         private static Song[] GetSongs()
         {
@@ -62,11 +63,11 @@ namespace Reperto.Data
         }
         private static Chord[] GetChords()
         {
-            var chords = new Chord[2];
+            var chords = new Chord[3];
             chords[0] = new Chord
             {
                 Name = "Am",
-                Image = $"wwwroot/assets/chords/Am.svg"
+                Image = "wwwroot/assets/chords/Am.svg"
             };
             chords[1] = new Chord
             {
@@ -80,9 +81,10 @@ namespace Reperto.Data
             };
             return chords;
         }
+
         private static Repertoire[] GetRepertoires()
         { 
-            var repertoires = new Repertoire[0];
+            var repertoires = new Repertoire[1];
             repertoires[0] = new Repertoire
             {
             Name = "Rock repertoire"
