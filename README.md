@@ -16,3 +16,10 @@
 - add new chords (using SVGuitar)
 - List repertoires properly for music performance purposes
 - delete data
+
+**TODO:**
+- add index to Lyrics URL when creating (0 = songs[0])'
+- when user adds pastes text into Lyrics input, generate & save lyrics txt file or directly save uploaded txt file
+
+**Libraries:**
+- SVGuitar (generating chords) -- https://github.com/omnibrain/svguitar
