@@ -10,6 +10,7 @@ using Reperto.Models;
 
 namespace Reperto.Controllers
 {
+    [Route("api/[controller]")]
     public class ChordsController : Controller
     {
         private readonly RepertoDbContext _context;
@@ -20,12 +21,16 @@ namespace Reperto.Controllers
         }
 
         // GET: Chords
+        [HttpGet]
+        [Route("Index")]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Chords.ToListAsync());
+            return Ok(await _context.Chords.ToListAsync());
         }
 
         // GET: Chords/Details/5
+        [HttpGet]
+        [Route("Details/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -40,13 +45,15 @@ namespace Reperto.Controllers
                 return NotFound();
             }
 
-            return View(chord);
+            return Ok(chord);
         }
 
         // GET: Chords/Create
+        [HttpGet]
+        [Route("Create")]
         public IActionResult Create()
         {
-            return View();
+            return Ok();
         }
 
         // POST: Chords/Create
@@ -54,6 +61,7 @@ namespace Reperto.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Create")]
         public async Task<IActionResult> Create([Bind("ChordId,Name,Image")] Chord chord)
         {
             if (ModelState.IsValid)
@@ -66,6 +74,7 @@ namespace Reperto.Controllers
         }
 
         // GET: Chords/Edit/5
+        [Route("Edit/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,6 +95,7 @@ namespace Reperto.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Edit/{id}")]
         public async Task<IActionResult> Edit(int id, [Bind("ChordId,Name,Image")] Chord chord)
         {
             if (id != chord.ChordId)
@@ -117,6 +127,7 @@ namespace Reperto.Controllers
         }
 
         // GET: Chords/Delete/5
+        [Route("Delete/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
