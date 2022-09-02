@@ -10,6 +10,7 @@ using Reperto.Models;
 
 namespace Reperto.Controllers
 {
+    [Route("api/[controller]")]
     public class SongsController : Controller
     {
         private readonly RepertoDbContext _context;
@@ -20,13 +21,17 @@ namespace Reperto.Controllers
         }
 
         // GET: Songs
+        [HttpGet]
+        [Route("Index")]
         public async Task<IActionResult> Index()
         {
-            var repertoDbContext = _context.Songs.Include(s => s.Repertoire);
-            return View(await repertoDbContext.ToListAsync());
+            var repertoDbContext = _context.Songs.Include(s => s.Repertoire).ToListAsync();
+            return Ok(await repertoDbContext);
         }
 
         // GET: Songs/Details/5
+        [HttpGet]
+        [Route("Details/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -42,10 +47,12 @@ namespace Reperto.Controllers
                 return NotFound();
             }
 
-            return View(song);
+            return Ok(song);
         }
 
         // GET: Songs/Create
+        [HttpGet]
+        [Route("Create")]
         public IActionResult Create()
         {
             ViewData["RepertoireId"] = new SelectList(_context.Repertoires, "RepertoireId", "RepertoireId");
@@ -57,6 +64,7 @@ namespace Reperto.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Create")]
         public async Task<IActionResult> Create([Bind("SongId,Title,Band,Lyrics,Mood,RepertoireId")] Song song)
         {
             if (ModelState.IsValid)
@@ -70,6 +78,7 @@ namespace Reperto.Controllers
         }
 
         // GET: Songs/Edit/5
+        [Route("Edit/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -91,6 +100,7 @@ namespace Reperto.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Edit/{id}")]
         public async Task<IActionResult> Edit(int id, [Bind("SongId,Title,Band,Lyrics,Mood,RepertoireId")] Song song)
         {
             if (id != song.SongId)
@@ -123,6 +133,7 @@ namespace Reperto.Controllers
         }
 
         // GET: Songs/Delete/5
+        [Route("Delete/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

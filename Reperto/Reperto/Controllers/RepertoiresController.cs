@@ -10,6 +10,7 @@ using Reperto.Models;
 
 namespace Reperto.Controllers
 {
+    [Route("api/[controller]")]
     public class RepertoiresController : Controller
     {
         private readonly RepertoDbContext _context;
@@ -20,12 +21,16 @@ namespace Reperto.Controllers
         }
 
         // GET: Repertoires
+        [HttpGet]
+        [Route("Index")]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Repertoires.ToListAsync());
+            return Ok(await _context.Repertoires.ToListAsync());
         }
 
         // GET: Repertoires/Details/5
+        [HttpGet]
+        [Route("Details/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -40,10 +45,12 @@ namespace Reperto.Controllers
                 return NotFound();
             }
 
-            return View(repertoire);
+            return Ok(repertoire);
         }
 
         // GET: Repertoires/Create
+        [HttpGet]
+        [Route("Create")]
         public IActionResult Create()
         {
             return View();
@@ -54,6 +61,7 @@ namespace Reperto.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Create")]
         public async Task<IActionResult> Create([Bind("RepertoireId,Name")] Repertoire repertoire)
         {
             if (ModelState.IsValid)
@@ -66,6 +74,8 @@ namespace Reperto.Controllers
         }
 
         // GET: Repertoires/Edit/5
+        [HttpGet]
+        [Route("Edit/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,6 +96,7 @@ namespace Reperto.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Edit/{id}")]
         public async Task<IActionResult> Edit(int id, [Bind("RepertoireId,Name")] Repertoire repertoire)
         {
             if (id != repertoire.RepertoireId)
@@ -117,6 +128,7 @@ namespace Reperto.Controllers
         }
 
         // GET: Repertoires/Delete/5
+        [Route("Delete/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
