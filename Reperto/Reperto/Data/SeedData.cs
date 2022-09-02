@@ -39,7 +39,7 @@ namespace Reperto.Data
             {
                 Title = "Seni kendime sakladim",
                 Band = "Duman",
-                Lyrics = "wwwroot/assets/songs/0",
+                Lyrics = "assets/songs/0.txt",
                 Mood = "Rock",
                 RepertoireId = 1
             };
@@ -47,7 +47,7 @@ namespace Reperto.Data
             {
                 Title = "Elimdeki saz yeter canima",
                 Band = "Duman",
-                Lyrics = "wwwroot/assets/songs/1",
+                Lyrics = "assets/songs/1.txt",
                 Mood = "Rock",
                 RepertoireId = 1
             };
@@ -55,7 +55,7 @@ namespace Reperto.Data
             {
                 Title = "Melek",
                 Band = "Duman",
-                Lyrics = "wwwroot/assets/songs/2",
+                Lyrics = "assets/songs/2.txt",
                 Mood = "Rock",
                 RepertoireId = 1
             };
@@ -67,17 +67,17 @@ namespace Reperto.Data
             chords[0] = new Chord
             {
                 Name = "Am",
-                Image = "wwwroot/assets/chords/Am.svg"
+                Image = "assets/chords/Am.svg"
             };
             chords[1] = new Chord
             {
                 Name = "Em",
-                Image = "wwwroot/assets/chords/Em.svg"
+                Image = "assets/chords/Em.svg"
             };
             chords[2] = new Chord
             {
                 Name = "D",
-                Image = "wwwroot/assets/chords/D.svg"
+                Image = "assets/chords/D.svg"
             };
             return chords;
         }
