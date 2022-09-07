@@ -10,6 +10,7 @@ using Reperto.Models;
 
 namespace Reperto.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
     public class ChordsController : Controller
     {
@@ -74,6 +75,7 @@ namespace Reperto.Controllers
         }
 
         // GET: Chords/Edit/5
+        [HttpGet]
         [Route("Edit/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -127,6 +129,7 @@ namespace Reperto.Controllers
         }
 
         // GET: Chords/Delete/5
+        [HttpGet]
         [Route("Delete/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {

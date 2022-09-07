@@ -11,6 +11,7 @@ using Reperto.Models;
 namespace Reperto.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class RepertoiresController : Controller
     {
         private readonly RepertoDbContext _context;
@@ -128,6 +129,7 @@ namespace Reperto.Controllers
         }
 
         // GET: Repertoires/Delete/5
+        [HttpGet]
         [Route("Delete/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {

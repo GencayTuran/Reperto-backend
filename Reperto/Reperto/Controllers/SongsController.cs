@@ -11,6 +11,7 @@ using Reperto.Models;
 namespace Reperto.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class SongsController : Controller
     {
         private readonly RepertoDbContext _context;
@@ -25,7 +26,7 @@ namespace Reperto.Controllers
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
-            var repertoDbContext = _context.Songs.Include(s => s.Repertoire).ToListAsync();
+            var repertoDbContext = _context.Songs.Include(s => s.Repertoire).Include(s => s.Key).ToListAsync();
             return Ok(await repertoDbContext);
         }
 
@@ -41,6 +42,7 @@ namespace Reperto.Controllers
 
             var song = await _context.Songs
                 .Include(s => s.Repertoire)
+                .Include(s => s.Key)
                 .FirstOrDefaultAsync(m => m.SongId == id);
             if (song == null)
             {
@@ -78,6 +80,7 @@ namespace Reperto.Controllers
         }
 
         // GET: Songs/Edit/5
+        [HttpGet]
         [Route("Edit/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -133,6 +136,7 @@ namespace Reperto.Controllers
         }
 
         // GET: Songs/Delete/5
+        [HttpGet]
         [Route("Delete/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -143,6 +147,7 @@ namespace Reperto.Controllers
 
             var song = await _context.Songs
                 .Include(s => s.Repertoire)
+                .Include(s => s.Key)
                 .FirstOrDefaultAsync(m => m.SongId == id);
             if (song == null)
             {
