@@ -15,5 +15,8 @@ namespace Reperto.Models
 
         public Repertoire Repertoire { get; set; }
         public int RepertoireId { get; set; }
+
+        public Key Key { get; set; }
+        public int KeyId { get; set; }
     }
 }
