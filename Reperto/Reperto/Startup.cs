@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Reperto.Data;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,8 @@ namespace Reperto
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            //CORS policy
             services.AddCors(options =>
             {
                 options.AddPolicy(
@@ -34,7 +37,11 @@ namespace Reperto
                         builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
                     });
             });
-            services.AddControllersWithViews();
+
+            //Swagger
+            services.AddSwaggerGen();
+
+            services.AddControllers();
             services.AddDbContext<RepertoDbContext>(opts => {
                 opts.UseSqlServer(
                 Configuration["ConnectionStrings:RepertoConnection"]);
@@ -44,6 +51,9 @@ namespace Reperto
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            
+
+            //To prevent CORS policy restriction (else api will not be reachable)
             app.UseCors("AllowOrigin");
             if (env.IsDevelopment())
             {
@@ -55,8 +65,15 @@ namespace Reperto
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Reperto API V1");
+            });
 
             app.UseRouting();
 
@@ -64,9 +81,11 @@ namespace Reperto
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                //endpoints.MapControllerRoute(
+                //    name: "default",
+                //    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapControllers();
             });
             SeedData.EnsurePopulated(app);
         }
