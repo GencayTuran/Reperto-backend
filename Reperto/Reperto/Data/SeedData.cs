@@ -19,9 +19,11 @@ namespace Reperto.Data
                 context.Songs.AddRange(GetSongs());
                 context.Chords.AddRange(GetChords());
                 context.Repertoires.AddRange(GetRepertoires());
+                context.Keys.AddRange(GetKeys());
 
                 context.SaveChanges();
             }
+
             //if (!context.Chords.Any())
             //{
             //    context.Chords.AddRange(GetChords());
@@ -41,7 +43,8 @@ namespace Reperto.Data
                 Band = "Duman",
                 Lyrics = "assets/songs/0.txt",
                 Mood = "Rock",
-                RepertoireId = 1
+                RepertoireId = 1,
+                KeyId = 1
             };
             songs[1] = new Song
             {
@@ -49,7 +52,8 @@ namespace Reperto.Data
                 Band = "Duman",
                 Lyrics = "assets/songs/1.txt",
                 Mood = "Rock",
-                RepertoireId = 1
+                RepertoireId = 1,
+                KeyId = 1
             };
             songs[2] = new Song
             {
@@ -57,7 +61,8 @@ namespace Reperto.Data
                 Band = "Duman",
                 Lyrics = "assets/songs/2.txt",
                 Mood = "Rock",
-                RepertoireId = 1
+                RepertoireId = 1,
+                KeyId = 1
             };
             return songs;
         }
@@ -83,16 +88,23 @@ namespace Reperto.Data
         }
 
         private static Repertoire[] GetRepertoires()
-        { 
+        {
             var repertoires = new Repertoire[1];
             repertoires[0] = new Repertoire
             {
-            Name = "Rock repertoire"
+                Name = "Rock repertoire"
             };
             return repertoires;
-            }
+        }
 
-
-     
+        private static Key[] GetKeys()
+        {
+            var keys = new Key[1];
+            keys[0] = new Key
+            {
+                Name = "E"
+            };
+            return keys;
+        }
     }
 }

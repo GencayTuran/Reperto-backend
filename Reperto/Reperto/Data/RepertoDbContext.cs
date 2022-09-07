@@ -16,5 +16,7 @@ namespace Reperto.Data
         public DbSet<Song> Songs { get; set; }
         public DbSet<Chord> Chords { get; set; }
         public DbSet<Repertoire> Repertoires { get; set; }
+        public DbSet<Key> Keys { get; set; }
+
     }
 }
