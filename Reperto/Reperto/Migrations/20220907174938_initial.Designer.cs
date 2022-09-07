@@ -9,7 +9,7 @@ using Reperto.Data;
 namespace Reperto.Migrations
 {
     [DbContext(typeof(RepertoDbContext))]
-    [Migration("20220805062607_initial")]
+    [Migration("20220907174938_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,6 +38,21 @@ namespace Reperto.Migrations
                     b.ToTable("Chords");
                 });
 
+            modelBuilder.Entity("Reperto.Models.Key", b =>
+                {
+                    b.Property<int>("KeyId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("KeyId");
+
+                    b.ToTable("Keys");
+                });
+
             modelBuilder.Entity("Reperto.Models.Repertoire", b =>
                 {
                     b.Property<int>("RepertoireId")
@@ -63,6 +78,9 @@ namespace Reperto.Migrations
                     b.Property<string>("Band")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("KeyId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Lyrics")
                         .HasColumnType("nvarchar(max)");
 
@@ -77,6 +95,8 @@ namespace Reperto.Migrations
 
                     b.HasKey("SongId");
 
+                    b.HasIndex("KeyId");
+
                     b.HasIndex("RepertoireId");
 
                     b.ToTable("Songs");
@@ -84,8 +104,14 @@ namespace Reperto.Migrations
 
             modelBuilder.Entity("Reperto.Models.Song", b =>
                 {
+                    b.HasOne("Reperto.Models.Key", "Key")
+                        .WithMany()
+                        .HasForeignKey("KeyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Reperto.Models.Repertoire", "Repertoire")
-                        .WithMany("Songs")
+                        .WithMany()
                         .HasForeignKey("RepertoireId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
