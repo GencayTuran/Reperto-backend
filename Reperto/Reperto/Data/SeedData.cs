@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Reperto.Helpers;
 using Reperto.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,38 +12,32 @@ namespace Reperto.Data
 {
     public class SeedData
     {
+        public static RepertoDbContext context;
         public static void EnsurePopulated(IApplicationBuilder app)
         {
-            RepertoDbContext context =
+            context =
                 app.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<RepertoDbContext>();
-            if (!context.Songs.Any())
+            if (!context.Chords.Any())
             {
                 context.Songs.AddRange(GetSongs());
                 context.Chords.AddRange(GetChords());
                 context.Repertoires.AddRange(GetRepertoires());
                 context.Keys.AddRange(GetKeys());
-
                 context.SaveChanges();
             }
-
-            //if (!context.Chords.Any())
-            //{
-            //    context.Chords.AddRange(GetChords());
-            //}
-            //if (!context.Repertoires.Any())
-            //{
-            //    context.Repertoires.AddRange(GetRepertoires());
-            //}
+            if (!context.ChordImages.Any())
+            {
+                context.ChordImages.AddRange(GetChordImages());
+                context.SaveChanges();
+            }
         }
         private static Song[] GetSongs()
         {
-            //TODO: add index to Lyrics URL when creating (0 = songs[0])
             var songs = new Song[3];
             songs[0] = new Song
             {
                 Title = "Seni kendime sakladim",
                 Band = "Duman",
-                Lyrics = "assets/songs/0.txt",
                 Mood = "Rock",
                 RepertoireId = 1,
                 KeyId = 1
@@ -50,7 +46,6 @@ namespace Reperto.Data
             {
                 Title = "Elimdeki saz yeter canima",
                 Band = "Duman",
-                Lyrics = "assets/songs/1.txt",
                 Mood = "Rock",
                 RepertoireId = 1,
                 KeyId = 1
@@ -59,32 +54,69 @@ namespace Reperto.Data
             {
                 Title = "Melek",
                 Band = "Duman",
-                Lyrics = "assets/songs/2.txt",
                 Mood = "Rock",
                 RepertoireId = 1,
                 KeyId = 1
             };
+
+            string lyricData;
+            int index = 0;
+            var files = Directory.GetFiles("D:/Projects/Reperto/Backend/Reperto/Reperto/wwwroot/assets/songs/");
+            foreach (var lyric in files)
+            {
+                lyricData = FileHelper.FileToText(lyric);
+                songs[index].Lyrics = lyricData;
+                index++;
+            }
+
             return songs;
         }
+
+        public static string[] ChordNames =
+        {
+                "A","Am","A#","A#m","B","Bm",
+                "C","Cm","C#","C#m","D","Dm",
+                "D#","D#m","E","Em","F","Fm",
+                "F#", "F#m", "G","Gm","G#","G#m",
+                "Fmaj7C"
+        };
+
         private static Chord[] GetChords()
         {
-            var chords = new Chord[3];
-            chords[0] = new Chord
+            int index = 0;
+            var chords = new Chord[ChordNames.Length];
+
+            do
             {
-                Name = "Am",
-                Image = "assets/chords/Am.svg"
-            };
-            chords[1] = new Chord
-            {
-                Name = "Em",
-                Image = "assets/chords/Em.svg"
-            };
-            chords[2] = new Chord
-            {
-                Name = "D",
-                Image = "assets/chords/D.svg"
-            };
+                chords[index] = new Chord { ChordName = ChordNames[index] };
+                index++;
+            } while (index != ChordNames.Length);
+
             return chords;
+        }
+
+        private static ChordImage[] GetChordImages()
+        {
+            var files = Directory.GetFiles("D:/Projects/Reperto/Backend/Reperto/Reperto/wwwroot/assets/chords/");
+            string svgData, fileName, chord;
+            int chordId; 
+            List<ChordImage> chordImages = new List<ChordImage>();
+            foreach (var svg in files)
+            {
+                svgData = FileHelper.FileToText(svg);
+                fileName = svg.Substring(66);
+                chord = fileName.Contains("-") ? fileName.Substring(0, fileName.Length - 6) : fileName.Substring(0, fileName.Length - 4);
+
+                foreach (var chordName in ChordNames)
+                {
+                    if (chord == chordName)
+                    {
+                        chordId = context.Chords.SingleOrDefault(c => c.ChordName == chordName).ChordId;
+                        chordImages.Add(new ChordImage { ImageData = svgData, ChordName = chordName, ChordId = chordId });
+                    }
+                }
+            }            
+            return chordImages.ToArray();
         }
 
         private static Repertoire[] GetRepertoires()
