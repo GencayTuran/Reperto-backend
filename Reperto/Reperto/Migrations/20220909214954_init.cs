@@ -2,7 +2,7 @@
 
 namespace Reperto.Migrations
 {
-    public partial class initial : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,8 +12,7 @@ namespace Reperto.Migrations
                 {
                     ChordId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
-                    Image = table.Column<string>(nullable: true)
+                    ChordName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -47,6 +46,27 @@ namespace Reperto.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ChordImages",
+                columns: table => new
+                {
+                    ChordImageId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ImageData = table.Column<string>(nullable: true),
+                    ChordName = table.Column<string>(nullable: true),
+                    ChordId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChordImages", x => x.ChordImageId);
+                    table.ForeignKey(
+                        name: "FK_ChordImages_Chords_ChordId",
+                        column: x => x.ChordId,
+                        principalTable: "Chords",
+                        principalColumn: "ChordId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Songs",
                 columns: table => new
                 {
@@ -77,6 +97,11 @@ namespace Reperto.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ChordImages_ChordId",
+                table: "ChordImages",
+                column: "ChordId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Songs_KeyId",
                 table: "Songs",
                 column: "KeyId");
@@ -90,10 +115,13 @@ namespace Reperto.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Chords");
+                name: "ChordImages");
 
             migrationBuilder.DropTable(
                 name: "Songs");
+
+            migrationBuilder.DropTable(
+                name: "Chords");
 
             migrationBuilder.DropTable(
                 name: "Keys");

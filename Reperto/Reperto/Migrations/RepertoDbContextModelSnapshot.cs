@@ -25,15 +25,35 @@ namespace Reperto.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("ChordName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ChordId");
 
                     b.ToTable("Chords");
+                });
+
+            modelBuilder.Entity("Reperto.Models.ChordImage", b =>
+                {
+                    b.Property<int>("ChordImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ChordId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ChordName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ChordImageId");
+
+                    b.HasIndex("ChordId");
+
+                    b.ToTable("ChordImages");
                 });
 
             modelBuilder.Entity("Reperto.Models.Key", b =>
@@ -98,6 +118,15 @@ namespace Reperto.Migrations
                     b.HasIndex("RepertoireId");
 
                     b.ToTable("Songs");
+                });
+
+            modelBuilder.Entity("Reperto.Models.ChordImage", b =>
+                {
+                    b.HasOne("Reperto.Models.Chord", "Chord")
+                        .WithMany("ChordImages")
+                        .HasForeignKey("ChordId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Reperto.Models.Song", b =>
