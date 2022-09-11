@@ -10,5 +10,6 @@ namespace Reperto.Models
         public int RepertoireId { get; set; }
         public string Name { get; set; }
 
+        List<Song> Songs { get; set; }
     }
 }
