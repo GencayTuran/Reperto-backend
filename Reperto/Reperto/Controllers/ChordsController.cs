@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Reperto.Data;
+using Reperto.Helpers;
 using Reperto.Models;
 
 namespace Reperto.Controllers
@@ -61,16 +64,20 @@ namespace Reperto.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [Route("Create")]
-        public async Task<IActionResult> Create([Bind("ChordId,Name,Image")] Chord chord)
+        public async Task<IActionResult> Create([FromForm] FormChord form)
         {
-            if (ModelState.IsValid)
+            //TODO: if (ModelState.IsValid)chordname already exist in Db --> only add chordimage to existing chordname. Else --> new chord + new chordImage
+            Chord chord = new Chord
             {
-                _context.Add(chord);
+                ChordName = form.ChordName,
+                //Image = imageData
+            };
+
+            _context.Add(chord);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
+            
             return View(chord);
         }
 
@@ -96,7 +103,6 @@ namespace Reperto.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [Route("Edit/{id}")]
         public async Task<IActionResult> Edit(int id, [Bind("ChordId,Name,Image")] Chord chord)
         {
@@ -150,7 +156,6 @@ namespace Reperto.Controllers
 
         // POST: Chords/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var chord = await _context.Chords.FindAsync(id);
@@ -162,6 +167,13 @@ namespace Reperto.Controllers
         private bool ChordExists(int id)
         {
             return _context.Chords.Any(e => e.ChordId == id);
+        }
+        public class FormChord
+        {
+            [Required]
+            public string ChordName { get; set; }
+            [Required]
+            public string Image { get; set; }
         }
     }
 }
