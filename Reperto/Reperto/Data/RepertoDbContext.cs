@@ -17,7 +17,6 @@ namespace Reperto.Data
         public DbSet<Chord> Chords { get; set; }
         public DbSet<Repertoire> Repertoires { get; set; }
         public DbSet<Key> Keys { get; set; }
-        public DbSet<ChordImage> ChordImages { get; set; }
 
     }
 }
