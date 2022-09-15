@@ -19,17 +19,18 @@ namespace Reperto.Data
                 app.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<RepertoDbContext>();
             if (!context.Chords.Any())
             {
+                context.Keys.AddRange(GetKeys());
+                context.SaveChanges();
                 context.Songs.AddRange(GetSongs());
                 context.Chords.AddRange(GetChords());
                 context.Repertoires.AddRange(GetRepertoires());
-                context.Keys.AddRange(GetKeys());
                 context.SaveChanges();
-            }
-            if (!context.ChordImages.Any())
-            {
                 context.ChordImages.AddRange(GetChordImages());
                 context.SaveChanges();
+                context.SongInRepertoires.AddRange(GetSongInRepertoires());
+                context.SaveChanges();
             }
+           
         }
         private static Song[] GetSongs()
         {
@@ -39,7 +40,6 @@ namespace Reperto.Data
                 Title = "Seni kendime sakladim",
                 Band = "Duman",
                 Mood = "Rock",
-                RepertoireId = 1,
                 KeyId = 1
             };
             songs[1] = new Song
@@ -47,7 +47,6 @@ namespace Reperto.Data
                 Title = "Elimdeki saz yeter canima",
                 Band = "Duman",
                 Mood = "Rock",
-                RepertoireId = 1,
                 KeyId = 1
             };
             songs[2] = new Song
@@ -55,7 +54,6 @@ namespace Reperto.Data
                 Title = "Melek",
                 Band = "Duman",
                 Mood = "Rock",
-                RepertoireId = 1,
                 KeyId = 1
             };
 
@@ -121,12 +119,43 @@ namespace Reperto.Data
 
         private static Repertoire[] GetRepertoires()
         {
-            var repertoires = new Repertoire[1];
+            var repertoires = new Repertoire[2];
             repertoires[0] = new Repertoire
             {
-                Name = "Rock repertoire"
+                Name = "Rock reperto"
+            };
+            repertoires[1] = new Repertoire
+            {
+                Name = "Other music"
             };
             return repertoires;
+        }
+
+        private static SongInRepertoire[] GetSongInRepertoires()
+        {
+            var songInRepertoires = new SongInRepertoire[4];
+            songInRepertoires[0] = new SongInRepertoire
+            {
+                SongId = 1,
+                RepertoireId = 1
+            };
+            songInRepertoires[1] = new SongInRepertoire
+            {
+                SongId = 2,
+                RepertoireId = 1
+            };
+            songInRepertoires[2] = new SongInRepertoire
+            {
+                SongId = 3,
+                RepertoireId = 1
+            };
+            songInRepertoires[3] = new SongInRepertoire
+            {
+                SongId = 1,
+                RepertoireId = 2
+            };
+
+            return songInRepertoires;
         }
 
         private static Key[] GetKeys()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -26,9 +27,27 @@ namespace Reperto.Controllers
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
-            var repertoDbContext = _context.Songs.Include(s => s.Repertoire).Include(s => s.Key).ToListAsync();
-            return Ok(await repertoDbContext);
+            var songs = 
+                _context.Songs
+                .Include(s => s.Key)
+                .ToListAsync();
+            return Ok(await songs);
         }
+
+        //needs to go to SonginRepertoire
+        //[HttpGet]
+        //[Route("SongsPerReperoire/{id}")]
+        //public async Task<IActionResult> SongsPerRepertoire([FromQuery] FormSongs songs)
+        //{
+
+
+        //    //var result = QuerySongs.PerRepertoire(_context, 1);
+        //    var result = _context.Songs
+        //        .Where(s => s.RepertoireId == songs.RepertoireId);
+        //    return Ok(result);
+
+        //}
+
 
         // GET: Songs/Details/5
         [HttpGet]
@@ -41,7 +60,6 @@ namespace Reperto.Controllers
             }
 
             var song = await _context.Songs
-                .Include(s => s.Repertoire)
                 .Include(s => s.Key)
                 .FirstOrDefaultAsync(m => m.SongId == id);
             if (song == null)
@@ -57,7 +75,6 @@ namespace Reperto.Controllers
         [Route("Create")]
         public IActionResult Create()
         {
-            ViewData["RepertoireId"] = new SelectList(_context.Repertoires, "RepertoireId", "RepertoireId");
             return View();
         }
 
@@ -67,7 +84,7 @@ namespace Reperto.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("Create")]
-        public async Task<IActionResult> Create([Bind("SongId,Title,Band,Lyrics,Mood,RepertoireId")] Song song)
+        public async Task<IActionResult> Create([Bind("SongId,Title,Band,Lyrics,Mood")] Song song)
         {
             if (ModelState.IsValid)
             {
@@ -75,7 +92,6 @@ namespace Reperto.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RepertoireId"] = new SelectList(_context.Repertoires, "RepertoireId", "RepertoireId", song.RepertoireId);
             return View(song);
         }
 
@@ -94,7 +110,6 @@ namespace Reperto.Controllers
             {
                 return NotFound();
             }
-            ViewData["RepertoireId"] = new SelectList(_context.Repertoires, "RepertoireId", "RepertoireId", song.RepertoireId);
             return View(song);
         }
 
@@ -102,9 +117,8 @@ namespace Reperto.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [Route("Edit/{id}")]
-        public async Task<IActionResult> Edit(int id, [Bind("SongId,Title,Band,Lyrics,Mood,RepertoireId")] Song song)
+        public async Task<IActionResult> Edit(int id, [Bind("SongId,Title,Band,Lyrics,Mood")] Song song)
         {
             if (id != song.SongId)
             {
@@ -131,7 +145,6 @@ namespace Reperto.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RepertoireId"] = new SelectList(_context.Repertoires, "RepertoireId", "RepertoireId", song.RepertoireId);
             return View(song);
         }
 
@@ -146,7 +159,6 @@ namespace Reperto.Controllers
             }
 
             var song = await _context.Songs
-                .Include(s => s.Repertoire)
                 .Include(s => s.Key)
                 .FirstOrDefaultAsync(m => m.SongId == id);
             if (song == null)
@@ -159,7 +171,6 @@ namespace Reperto.Controllers
 
         // POST: Songs/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var song = await _context.Songs.FindAsync(id);

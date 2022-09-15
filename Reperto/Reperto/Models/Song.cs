@@ -10,12 +10,8 @@ namespace Reperto.Models
         public int SongId { get; set; }
         public string Title { get; set; }
         public string Band { get; set; }
-        public string Lyrics { get; set; } //link to resources txt files
+        public string Lyrics { get; set; }
         public string Mood { get; set; }
-
-        public Repertoire Repertoire { get; set; }
-        public int RepertoireId { get; set; }
-
         public Key Key { get; set; }
         public int KeyId { get; set; }
     }

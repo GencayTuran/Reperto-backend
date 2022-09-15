@@ -26,8 +26,11 @@ namespace Reperto.Controllers
         [Route("Index")]
         public async Task<IActionResult> Index()
         {
-            return Ok(await _context.Repertoires.ToListAsync());
+            var repertoires = await _context.Repertoires.ToListAsync();
+
+            return Ok(repertoires);
         }
+
 
         // GET: Repertoires/Details/5
         [HttpGet]
