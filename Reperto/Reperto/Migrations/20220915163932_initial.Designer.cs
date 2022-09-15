@@ -9,8 +9,8 @@ using Reperto.Data;
 namespace Reperto.Migrations
 {
     [DbContext(typeof(RepertoDbContext))]
-    [Migration("20220909214954_init")]
-    partial class init
+    [Migration("20220915163932_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -107,9 +107,6 @@ namespace Reperto.Migrations
                     b.Property<string>("Mood")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RepertoireId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
@@ -117,15 +114,35 @@ namespace Reperto.Migrations
 
                     b.HasIndex("KeyId");
 
+                    b.ToTable("Songs");
+                });
+
+            modelBuilder.Entity("Reperto.Models.SongInRepertoire", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("RepertoireId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SongId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
                     b.HasIndex("RepertoireId");
 
-                    b.ToTable("Songs");
+                    b.HasIndex("SongId");
+
+                    b.ToTable("SongInRepertoires");
                 });
 
             modelBuilder.Entity("Reperto.Models.ChordImage", b =>
                 {
                     b.HasOne("Reperto.Models.Chord", "Chord")
-                        .WithMany("ChordImages")
+                        .WithMany()
                         .HasForeignKey("ChordId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -138,10 +155,19 @@ namespace Reperto.Migrations
                         .HasForeignKey("KeyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
 
+            modelBuilder.Entity("Reperto.Models.SongInRepertoire", b =>
+                {
                     b.HasOne("Reperto.Models.Repertoire", "Repertoire")
                         .WithMany()
                         .HasForeignKey("RepertoireId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Reperto.Models.Song", "Song")
+                        .WithMany()
+                        .HasForeignKey("SongId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

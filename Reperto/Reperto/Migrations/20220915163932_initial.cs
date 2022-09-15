@@ -2,7 +2,7 @@
 
 namespace Reperto.Migrations
 {
-    public partial class init : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -76,7 +76,6 @@ namespace Reperto.Migrations
                     Band = table.Column<string>(nullable: true),
                     Lyrics = table.Column<string>(nullable: true),
                     Mood = table.Column<string>(nullable: true),
-                    RepertoireId = table.Column<int>(nullable: false),
                     KeyId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -88,11 +87,31 @@ namespace Reperto.Migrations
                         principalTable: "Keys",
                         principalColumn: "KeyId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SongInRepertoires",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RepertoireId = table.Column<int>(nullable: false),
+                    SongId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SongInRepertoires", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Songs_Repertoires_RepertoireId",
+                        name: "FK_SongInRepertoires_Repertoires_RepertoireId",
                         column: x => x.RepertoireId,
                         principalTable: "Repertoires",
                         principalColumn: "RepertoireId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SongInRepertoires_Songs_SongId",
+                        column: x => x.SongId,
+                        principalTable: "Songs",
+                        principalColumn: "SongId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -102,14 +121,19 @@ namespace Reperto.Migrations
                 column: "ChordId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SongInRepertoires_RepertoireId",
+                table: "SongInRepertoires",
+                column: "RepertoireId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SongInRepertoires_SongId",
+                table: "SongInRepertoires",
+                column: "SongId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Songs_KeyId",
                 table: "Songs",
                 column: "KeyId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Songs_RepertoireId",
-                table: "Songs",
-                column: "RepertoireId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -118,16 +142,19 @@ namespace Reperto.Migrations
                 name: "ChordImages");
 
             migrationBuilder.DropTable(
-                name: "Songs");
+                name: "SongInRepertoires");
 
             migrationBuilder.DropTable(
                 name: "Chords");
 
             migrationBuilder.DropTable(
-                name: "Keys");
+                name: "Repertoires");
 
             migrationBuilder.DropTable(
-                name: "Repertoires");
+                name: "Songs");
+
+            migrationBuilder.DropTable(
+                name: "Keys");
         }
     }
 }
